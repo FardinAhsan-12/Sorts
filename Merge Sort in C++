@@ -1,13 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Merge function using a single temp array
+// Merge two halves using a single temp array
 void merge(vector<int>& arr, vector<int>& temp, int left, int mid, int right) {
-    int i = left;     // starting index of left subarray
-    int j = mid + 1;  // starting index of right subarray
-    int k = left;     // index for temp array
+    int i = left;     // left subarray index
+    int j = mid + 1;  // right subarray index
+    int k = left;     // temp array index
 
-    // Merge both halves into temp[]
     while (i <= mid && j <= right) {
         if (arr[i] <= arr[j])  // stable merge
             temp[k++] = arr[i++];
@@ -15,15 +14,11 @@ void merge(vector<int>& arr, vector<int>& temp, int left, int mid, int right) {
             temp[k++] = arr[j++];
     }
 
-    // Copy remaining elements of left half
     while (i <= mid)
         temp[k++] = arr[i++];
-
-    // Copy remaining elements of right half
     while (j <= right)
         temp[k++] = arr[j++];
 
-    // Copy merged elements back to original array
     for (int idx = left; idx <= right; idx++)
         arr[idx] = temp[idx];
 }
@@ -32,27 +27,32 @@ void merge(vector<int>& arr, vector<int>& temp, int left, int mid, int right) {
 void mergeSort(vector<int>& arr, vector<int>& temp, int left, int right) {
     if (left < right) {
         int mid = left + (right - left) / 2;
-
-        mergeSort(arr, temp, left, mid);      // left half
-        mergeSort(arr, temp, mid + 1, right); // right half
-
-        merge(arr, temp, left, mid, right);   // merge them
+        mergeSort(arr, temp, left, mid);
+        mergeSort(arr, temp, mid + 1, right);
+        merge(arr, temp, left, mid, right);
     }
 }
 
 int main() {
-    vector<int> arr = {38, 27, 43, 3, 9, 82, 10};
-    int n = arr.size();
-    vector<int> temp(n);  // single temp array allocated once
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    cout << "Original array:\n";
-    for (int x : arr) cout << x << " ";
-    cout << "\n";
+    int n;
+    cout << "Enter number of elements: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    cout << "Enter " << n << " elements:\n";
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    vector<int> temp(n);  // one reusable temp array
 
     mergeSort(arr, temp, 0, n - 1);
 
     cout << "Sorted array:\n";
-    for (int x : arr) cout << x << " ";
+    for (int x : arr)
+        cout << x << " ";
     cout << "\n";
 
     return 0;
